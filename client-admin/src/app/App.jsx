@@ -1,12 +1,14 @@
-export const App = () => {
-    return (
+import LoginForm from "../features/components/LoginForm";
+import { AuthPage } from "../features/pages/AuthPage";
+
+function App() {   
+  return (
         <>
-          <h1 className="text-3xl">Hola Mundo</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua.</p>
+          <h1>Hola Mundo</h1>
+          <AuthPage />
+          <LoginForm />
         </>
-  )
+  );
 }
 
 export default App;
