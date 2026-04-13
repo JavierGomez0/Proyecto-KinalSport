@@ -1,4 +1,4 @@
-export const LoginForm = () => {
+export const LoginForm = ({ onForgot }) => {
 
     return ( 
         <form className="space-y-5">
@@ -30,9 +30,16 @@ export const LoginForm = () => {
             text-sm">
                 Iniciar Sesión
             </button>
+<button
+  type="button"
+  onClick={onForgot}
+  className="text-main-blue hover:underline"
+>
+  ¿Olvidaste tu contraseña?
+</button>
+            
 
         </form>
     );
 }
 
-export default LoginForm;

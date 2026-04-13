@@ -1,14 +1,13 @@
-import LoginForm from "../features/components/LoginForm";
-import { AuthPage } from "../features/pages/AuthPage";
-
-function App() {   
+import { AppRoutes } from "./router/AppRoutes.jsx";
+import { Toaster, toast } from "react-hot-toast"
+// App.jsx
+function App() {
   return (
-        <>
-          <h1>Hola Mundo</h1>
-          <AuthPage />
-          <LoginForm />
-        </>
+    <>
+    
+      <AppRoutes />
+    </>
   );
 }
-
+ 
 export default App;
