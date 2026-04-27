@@ -17,6 +17,7 @@ import { SettingsUser } from "../../../features/users/components/SettingsUser";
 import { UserComboBox } from "../../../features/users/components/UserComboBox";
 import { UserDetailModal } from "../../../features/users/components/UserDetailModal";
 import { Users } from "../../../features/users/components/Users";
+import { Outlet } from "react-router-dom";
 
 export const DashboardContainer = () => {
 
@@ -30,25 +31,7 @@ export const DashboardContainer = () => {
         <Sidebar />
 
         <main className="flex-1 p-6">
-          {/* Children */}
-          {/* <Fields /> */}
-          {/* <FieldModal /> */}
-          {/* <Reservations />*/}
-          {/* <Teams /> */}
-          {/* <TeamModal /> */}
-          {/* <TournamentModal /> */}
-          {/* <Tournaments /> */}
-          {/* <FieldsAdmin /> */}
-          {/* <ReservationsAdmin />*/}
-          {/* <TeamsAdmin /> */}
-          {/* <TournamentsAdmin /> */}
-          {/* <Settings /> */}
-          {/* <CreateUserModal /> */}
-          {/* <SettingsUser /> */}
-          {/* <TeamsUser /> */}
-          {/* <UserComboBox /> */}
-          {/* <UserDetailModal /> */}
-          {/* <Users /> */}
+          <Outlet />
         </main>
       </div>
     </div>
