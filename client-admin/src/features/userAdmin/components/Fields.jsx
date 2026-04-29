@@ -45,7 +45,6 @@ useUIStore
 
             {/* GRID */}
             <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {fields.map((field) => {})}
 
                 {/* CARD EJEMPLO */}
                 <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:scale-[1.02]">
