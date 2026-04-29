@@ -1,4 +1,30 @@
+import { use, useEffect, useState } from "react";
+import { useEffect as useToastEffect } from "react";
+
+import { useFieldsStore } from "../../users/store/adminStore";
+import { useUIStore } from "../../auth/store/uiStore";
+
+import { showError } from "../../../shared/utils/toast";
+import {spinner} from "@material-tailwind/react";
+import { FieldModal } from "../../fields/components/FieldModal";
+
 export const FieldsAdmin = () => {
+useUIStore
+    const { fields, loading, error, getFields } = useFieldsStore();
+    const { openConfirm } = useUIStore();
+
+    const [openModal, setOpenModal] = useState(false);
+    const [selectField, setSelectField] = useState(null);
+
+    useEffect(() => {
+        getFields();
+    }, [getFields]);
+
+    useToastEffect(() => {
+        if (error) 
+            showError(error);
+        }, [error]);
+
     return (
         <div className="p-4">
             {/* HEADER */}
@@ -19,6 +45,7 @@ export const FieldsAdmin = () => {
 
             {/* GRID */}
             <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {fields.map((field) => {})}
 
                 {/* CARD EJEMPLO */}
                 <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:scale-[1.02]">
