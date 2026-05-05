@@ -8,7 +8,7 @@ export const LoginForm = ({ onForgot }) => {
     const navigate = useNavigate();
 
     const login = useAuthStore((state) => state.login);
-    const loading = useAuthStore((state)=> state.loading);
+    const loading = useAuthStore((state) => state.loading);
     const error = useAuthStore((state) => state.error);
 
     const {
@@ -17,18 +17,16 @@ export const LoginForm = ({ onForgot }) => {
         formState: { errors },
     } = useForm();
 
-    const onSumnit = async (data) =>{
+    const onSubmit = async (data) => {
         const res = await login(data);
-        if(res){
+        if (res?.success) {
             navigate("/dashboard");
-            toast.success("!Bienvenido de nuevo");
-        }else{
-            toast.error(res.error);
+            toast.success("¡Bienvenido de nuevo!");
         }
     };
 
     return (
-        <form onSubmit={handleSubmit(onSumnit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Sección de de email o usuario */}
             <div>
                 <label className="block text-sm font-medium text-gray-800 mb-1.5">
@@ -64,7 +62,7 @@ export const LoginForm = ({ onForgot }) => {
                 disabled={loading}
                 className="w-full bg-main-blue hover:opacity-90 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 text-sm"
             >
-                {loading ? "Iniciando...": "Iniciar Sesión"}
+                {loading ? "Iniciando..." : "Iniciar Sesión"}
             </button>
 
             <p className="text-center text-sm">
@@ -73,7 +71,7 @@ export const LoginForm = ({ onForgot }) => {
                     onClick={onForgot}
                     className="text-main-blue hover:underline"
                 >
-                ¿Olvidaste tu contraseña?
+                    ¿Olvidaste tu contraseña?
                 </button>
             </p>
         </form>

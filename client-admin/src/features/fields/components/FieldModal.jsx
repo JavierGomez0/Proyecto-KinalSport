@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
-import { useFieldsStore } from "../../users/store/adminStore";
 import { Spinner } from "../../auth/components/Spinner";
-import { useSaveField } from "../hooks/useSaveField";
+import { useFieldsStore } from "../../users/store/adminStore";
+import { useSaveField } from "../hooks/useSaveField"
 import { showSuccess, showError } from "../../../shared/utils/toast";
 
-export const FieldModal = ({isOpen, onClose, field}) => {
+export const FieldModal = ({ isOpen, onClose, field }) => {
 
+    //Formulario
     const {
         register,
         handleSubmit,
         reset,
         watch,
-        formState: {errors},
+        formState: { errors },
     } = useForm();
 
     const { saveField } = useSaveField();
-    const loading = useFieldsStore((state)=> state.loading);
+    const loading = useFieldsStore((state) => state.loading);
 
-    const [preview, setPreview ] = useState(null);
+    const [preview, setPreview] = useState(null);
 
     useEffect(() => {
-        if(isOpen){
-            if(field){
+        if (isOpen) {
+            if (field) {
                 reset({
                     fieldName: field.fieldName,
                     fieldType: field.fieldType,
@@ -32,7 +32,7 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                     description: field.description,
                 });
                 setPreview(field.photo);
-            }else {
+            } else {
                 reset({
                     fieldName: "",
                     fieldType: "",
@@ -43,11 +43,11 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                 setPreview(null);
             }
         }
-    },[isOpen, field, reset]);
+    }, [isOpen, field, reset]);
 
     useEffect(() => {
         const subscription = watch((value, { name }) => {
-            if (name === "photo" && value.photo && value.photo.length > 0) {
+            if (name == "photo" && value.photo && value.photo.length > 0) {
                 setPreview(URL.createObjectURL(value.photo[0]));
             }
         });
@@ -57,23 +57,21 @@ export const FieldModal = ({isOpen, onClose, field}) => {
     const onSubmit = async (data) => {
         try {
             await saveField(data, field?._id);
-
             showSuccess(
                 field
-                ? "Campo Actualizado Correctamente"
-                : "Campo Creado Correctamente"
+                    ? "Campo actualizado correctamente"
+                    : "Campo creado correctamente"
             );
-
             reset();
             setPreview(null);
             onClose();
-
         } catch (error) {
-            showError(error?.message || "Error al guardar el campo");
+            showError("Error al guardar el campo");
         }
-    };
+    }
 
     if (!isOpen) return null;
+
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 px-3 sm:px-4">
@@ -82,10 +80,7 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                 {/* HEADER */}
                 <div
                     className="p-4 sm:p-5 text-white sticky top-0 z-10"
-                    style={{
-                        background:
-                            "linear-gradient(90deg, var(--main-blue) 0%, #1956a3 100%)",
-                    }}
+                    style={{ background: "linear-gradient(90deg, var(--main-blue) 0%, #1956a3 100%)" }}
                 >
                     <h2 className="text-xl sm:text-2xl font-bold">
                         {field ? "Editar Campo" : "Nuevo Campo"}
@@ -96,27 +91,22 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                 </div>
 
                 {/* FORM */}
-                <form  
-                className="p-4 sm:p-6 space-y-5 overflow-y-auto"
-                onSubmit={handleSubmit(onSubmit)}
+                <form className="p-4 sm:p-6 space-y-5 overflow-y-auto"
+                    onSubmit={handleSubmit(onSubmit)}
                 >
 
                     {/* PREVIEW */}
                     <div className="flex justify-center">
                         <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl bg-gray-100 border flex items-center justify-center overflow-hidden shadow-inner">
-                            
-                            {preview ? (
-                                <img
-                                    src={preview}
-                                    alt="Preview"
-                                    className="w-full h-full object-cover"
-                                />
-                            ) : (
-                                <span className="text-gray-400 text-xs sm:text-sm">
-                                    Sin imagen
-                                </span>
-                            )}
-
+                            <span className="text-gray-400 text-xs sm:text-sm">
+                                {preview ? (
+                                    <img src={preview} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-gray-400 text-xs sm:text-sm">
+                                        Sin imagen
+                                    </span>
+                                )}
+                            </span>
                         </div>
                     </div>
 
@@ -129,19 +119,20 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                                 Nombre del campo
                             </label>
                             <input
-                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm 
-                                focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                                 placeholder="Ej. Cancha Central"
-                                {...register("fieldName", { 
-                                    required: "El nombre es obligatorio",
+
+                                {...register("fieldName", {
+                                    required: "El nombre del campo es obligatorio",
                                     minLength: {
                                         value: 3,
                                         message: "El nombre debe tener al menos 3 caracteres"
                                     }
                                 })}
                             />
+
                             {errors.fieldName && (
-                                <p className="text-red-500 text-xs mt-1">
+                                <p className="text-red-600 text-xs mt-1">
                                     {errors.fieldName.message}
                                 </p>
                             )}
@@ -153,20 +144,18 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                                 Tipo de cancha
                             </label>
                             <select
-                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm 
-                                focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                                 {...register("fieldType", {
-                                    required: "El tipo de cancha es obligatorio"
+                                    required: "El tipo es obligatorio",
                                 })}
-                            >
+                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
                                 <option value="">Seleccione un tipo</option>
-                                <option value="NATURAL">Césped Natural</option>
-                                <option value="SINTETICA">Césped Sintética</option>
+                                <option value="SINTETICA">Sintética</option>
                                 <option value="CONCRETO">Concreto</option>
-                                <option value="ARENA">Arena</option>
+                                <option value="NATURAL">Natural</option>
                             </select>
+
                             {errors.fieldType && (
-                                <p className="text-red-500 text-xs mt-1">
+                                <p className="text-red-600 text-xs mt-1">
                                     {errors.fieldType.message}
                                 </p>
                             )}
@@ -178,19 +167,17 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                                 Capacidad
                             </label>
                             <select
-                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm 
-                                focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                                 {...register("capacity", {
-                                    required: "La capacidad es obligatoria"
+                                    required: "La capacidad es obligatoria",
                                 })}
-                            >
+                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
                                 <option value="">Seleccione capacidad</option>
                                 <option value="FUTBOL_5">Fútbol 5</option>
                                 <option value="FUTBOL_7">Fútbol 7</option>
                                 <option value="FUTBOL_11">Fútbol 11</option>
                             </select>
                             {errors.capacity && (
-                                <p className="text-red-500 text-xs mt-1">
+                                <p className="text-red-600 text-xs mt-1">
                                     {errors.capacity.message}
                                 </p>
                             )}
@@ -203,19 +190,16 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                             </label>
                             <input
                                 type="number"
-                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm 
-                                focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                                 placeholder="Q100"
+
                                 {...register("pricePerHour", {
                                     required: "El precio es obligatorio",
-                                    min: {
-                                        value: 0,
-                                        message: "El precio debe ser mayor a 0"
-                                    }
+                                    min: { value: 1, message: "Debe ser mayor a 0" },
                                 })}
                             />
                             {errors.pricePerHour && (
-                                <p className="text-red-500 text-xs mt-1">
+                                <p className="text-red-600 text-xs mt-1">
                                     {errors.pricePerHour.message}
                                 </p>
                             )}
@@ -227,15 +211,15 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                                 Descripción
                             </label>
                             <textarea
-                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm 
-                                focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                                 placeholder="Detalles del campo..."
-                                {...register("description", { 
-                                    required: "La descripción es obligatoria"
+
+                                {...register("description", {
+                                    required: "La descripción es obligatoria",
                                 })}
                             />
                             {errors.description && (
-                                <p className="text-red-500 text-xs mt-1">
+                                <p className="text-red-600 text-xs mt-1">
                                     {errors.description.message}
                                 </p>
                             )}
@@ -248,9 +232,9 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                             </label>
                             <input
                                 type="file"
-                                className="w-full px-3 py-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 
-                                hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 transition cursor-pointer"
+                                className="w-full px-3 py-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 transition cursor-pointer"
                                 accept="image/*"
+
                                 {...register("photo")}
                             />
                         </div>
@@ -259,8 +243,8 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                     {/* BOTONES */}
                     <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t">
                         <button
-                            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
                             type="button"
+                            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
                             onClick={() => {
                                 reset();
                                 setPreview(null);
@@ -269,27 +253,26 @@ export const FieldModal = ({isOpen, onClose, field}) => {
                         >
                             Cancelar
                         </button>
-
                         <button
+                            type="submit"
                             className="w-full sm:w-auto px-5 py-2 rounded-lg text-white font-medium transition shadow"
                             style={{
                                 background:
                                     "linear-gradient(90deg, var(--main-blue) 0%, #1956a3 100%)",
                                 border: "none",
                             }}
-                            type="submit"
                         >
                             {loading ? (
                                 <Spinner small />
                             ) : field ? (
                                 "Guardar cambios"
                             ) : (
-                                "Crear Campo"
+                                "Crear campo"
                             )}
                         </button>
                     </div>
-                </form>
+                </form  >
             </div>
-        </div>
+        </div >
     );
 };

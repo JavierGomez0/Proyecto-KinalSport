@@ -1,90 +1,103 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import toast from 'react-hot-toast';
-
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import {
-    login as loginRequest,
-} from '../../../shared/api';
+    login as loginRequest
+} from "../../../shared/api"
+import toast from "react-hot-toast";
 
 export const useAuthStore = create(
     persist(
         (set, get) => ({
-        user: null,
-        token: null,
-        refreshToken: null,
-        expiresAt: null,
-        loading: false,
-        error: null,
-        isLoadingAuth: false,
-        isAuthenticated: false,
+            user: null,
+            token: null,
+            refreshToken: null,
+            expiresAt: null,
+            loading: false,
+            error: null,
+            isLoadingAuth: true,
+            isAuthenticated: false,
 
-        checkAuth: () => {
-            const token = get().token;
-            const role = get().user?.role;
-            const isAdmin = role === 'ADMIN_ROLE';
+            checkAuth: () => {
+                const token = get().token;
+                const role = get().user?.role;
+                const isAdmin = role === "ADMIN_ROLE";
 
-            if (token && isAdmin) {
-                set({
-                    user: null,
-                    token: null,
-                    refreshToken: null,
-                    expiresAt: null,
-                    isAuthenticated: true,
-                    isLoadingAuth: false,
-                    error: "No tiene permiso para acceder como administrador"
-                })
-            }
-        },
-
-        logout: () => {
-            set({
-                user: null,
-                token: null,
-                refreshToken: null,
-                expiresAt: null,
-                isAuthenticated: false,
-            })
-        },
-
-        login: async ({ emailOrUsername, password }) => {
-
-            const { data } = await loginRequest({ emailOrUsername, password })
-
-            // solo administradores pueden iniciar sesión en cliente-admin
-            const role = data?.userDetails?.role;
-            if (role !== 'ADMIN_ROLE') {
-                const message = "No tiene permiso para acceder como administrador";
-                
+                if (token && !isAdmin) {
+                    set({
+                        user: null,
+                        token: null,
+                        refreshToken: null,
+                        expiresAt: null,
+                        isAuthenticated: false,
+                        isLoadingAuth: true,
+                        error: "No tienes permiso para acceder como administrador"
+                    })
+                }
+            },
+            logout: () => {
                 set({
                     user: null,
                     token: null,
                     refreshToken: null,
                     expiresAt: null,
                     isAuthenticated: false,
-                    loading: false,
-                    error: message,
-                });
+                })
+            },
+            login: async ({ emailOrUsername, password }) => {
 
-                toast.error(message);
-                return { success: false, message };
-            }
+                set({ loading: true })
+                try {
 
-            set(
-                {
-                    user: data.userDetails,
-                    token: data.accessToken || data.token,
-                    refreshToken: data.refreshToken,
-                    expiresAt: data.expiresIn || data.expiresAt,
-                    isAuthenticated: true,
-                    loading: false,
+                    const { data } = await loginRequest({ emailOrUsername, password })
+
+                    // Solo administradores pueden iniciar sesion en client-admin
+
+                    const role = data?.userDetails?.role;
+                    if (role !== "ADMIN_ROLE") {
+                        const message = "No tienes permiso para acceder como administrador";
+                        set({
+                            user: null,
+                            token: null,
+                            refreshToken: null,
+                            expiresAt: null,
+                            isAuthenticated: false,
+                            loading: false,
+                            error: message,
+                        });
+
+                        toast.error(message);
+                        return { success: false, error: message };
+                    }
+
+                    set({
+                        user: data.userDetails,
+                        token: data.accessToken || data.token,
+                        refreshToken: data.refreshToken,
+                        expiresAt: data.expiresIn || data.expiresAt,
+                        isAuthenticated: true,
+                        loading: false,
+                    })
+                    return { success: true, user: data.userDetails };
+                } catch (error) {
+                    const errorMsg = error.response?.data?.message || "Error de conexion";
+                    set({
+                        loading: false,
+                        error: errorMsg,
+                    })
+                    toast.error(errorMsg);
+                    return { success: false, error: errorMsg };
                 }
-            );
-
-            return { success: true }
-
-        },
-        //--------------------------------------
-    }),
-        { name: "auth-store" }
+            },
+        }),
+        { 
+            name: "auth-store-v2",
+            partialize: (state) => ({
+                user: state.user,
+                token: state.token,
+                refreshToken: state.refreshToken,
+                expiresAt: state.expiresAt,
+                isAuthenticated: state.isAuthenticated
+            })
+        }
     )
 );
