@@ -7,6 +7,7 @@ import { useUIStore } from "../../auth/store/uiStore";
 import { showError } from "../../../shared/utils/toast"
 import { Spinner } from "@material-tailwind/react";
 import { FieldModal } from "./FieldModal";
+import { showConfirmToast } from "../../auth/components/ConfirmModal";
 
 export const Fields = () => {
 
@@ -98,10 +99,13 @@ export const Fields = () => {
 
                                 <button className="flex-1 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition"
                                     onClick={() =>
-                                        openConfirm({
+                                        showConfirmToast({
                                             title: "Eliminar Campo",
-                                            message: `Eliminar ${field.fieldName}?`,
-                                            onConfirm: () => deleteField(field._id),
+                                            message: `¿Eliminar${field.fieldName}`,
+                                            onConfirm: () => {
+                                                console.log("confirmar ejecucacion");
+                                                deleteField(field._id);
+                                            }
                                         })
                                     }
                                 >

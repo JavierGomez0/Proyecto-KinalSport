@@ -26,7 +26,7 @@ export const FieldModal = ({ isOpen, onClose, field }) => {
             if (field) {
                 reset({
                     fieldName: field.fieldName,
-                    fieldType: field.fieldType,
+                    fieldType: field.typeSurface,
                     capacity: field.capacity,
                     pricePerHour: field.pricePerHour,
                     description: field.description,
@@ -149,9 +149,9 @@ export const FieldModal = ({ isOpen, onClose, field }) => {
                                 })}
                                 className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
                                 <option value="">Seleccione un tipo</option>
-                                <option value="SINTETICA">Sintética</option>
-                                <option value="CONCRETO">Concreto</option>
-                                <option value="NATURAL">Natural</option>
+                                <option value="SINTETICA">SINTETICA</option>
+                                <option value="CONCRETO">CONCRETO</option>
+                                <option value="NATURAL">NATURAL</option>
                             </select>
 
                             {errors.fieldType && (
@@ -172,9 +172,9 @@ export const FieldModal = ({ isOpen, onClose, field }) => {
                                 })}
                                 className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
                                 <option value="">Seleccione capacidad</option>
-                                <option value="FUTBOL_5">Fútbol 5</option>
-                                <option value="FUTBOL_7">Fútbol 7</option>
-                                <option value="FUTBOL_11">Fútbol 11</option>
+                                <option value="FUTBOL_5">FUTBOL_5</option>
+                                <option value="FUTBOL_7">FUTBOL_7</option>
+                                <option value="FUTBOL_11">FUTBOL_11</option>
                             </select>
                             {errors.capacity && (
                                 <p className="text-red-600 text-xs mt-1">
